@@ -1,8 +1,6 @@
-
 <div class="my-5">
   <h1 class="text-3xl font-bold">Todos los productos</h1>
-  <h2 class="text-xl ">Para todos los gustos</h2>
-
+  <h2 class="text-xl">Para todos los gustos</h2>
 </div>
 
 <hr class="border-gray-300 mb-5" />
@@ -10,12 +8,12 @@
 <div
   class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-2 gap-3"
 >
-  <product-card></product-card>
-  <product-card></product-card>
-  <product-card></product-card>
-  <product-card></product-card>
-  <product-card></product-card>
-  <product-card></product-card>
-  <product-card></product-card>
-  <product-card></product-card>
+  @for (product of productsResource.value()?.products; track $index) {
+
+  <product-card [product]="product"></product-card>
+  }@empty {
+  <div class="col-span-4 text-center">
+    <p class="text-gray-500">No hay productos disponibles en este momento.</p>
+  </div>
+  }
 </div>
