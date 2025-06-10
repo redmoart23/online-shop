@@ -11,7 +11,12 @@ export const storeRoutes: Routes = [
     component: StoreLayoutComponent,
     children: [
       {
-        path: 'home',
+        path: '',
+        redirectTo: '/home',
+        pathMatch: 'full',
+      },
+      {
+        path: 'home' ,
         component: HomePageComponent, // Replace with actual HomeComponent
       },
       {

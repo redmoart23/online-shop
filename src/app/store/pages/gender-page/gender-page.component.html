@@ -13,7 +13,12 @@
   <product-card [product]="product"></product-card>
   }@empty {
   <div class="col-span-4 text-center">
-    <p class="text-gray-500">No hay productos disponibles en este momento.</p>
+    <span class="loading loading-dots loading-xl text-primary"></span>
   </div>
   }
 </div>
+
+<shared-pagination
+  [pages]="productsResource.value()?.pages ?? 0"
+  [currentPage]="paginationService.currentPage()"
+/>
