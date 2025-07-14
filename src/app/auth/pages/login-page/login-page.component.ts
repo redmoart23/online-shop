@@ -7,7 +7,6 @@ import { AuthService } from '@/auth/services/auth.service';
   selector: 'app-login-page',
   imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './login-page.component.html',
-  styles: ``,
 })
 export class LoginPageComponent {
   fb = inject(FormBuilder);
