@@ -30,6 +30,8 @@ export class AuthService {
 
   token = computed<string | null>(() => this._token());
 
+  isAdmin = computed(() => this._user()?.roles.includes('admin') ?? false);
+
 
   login(email: string, password: string): Observable<boolean> {
     this._authStatus.set('checking');
@@ -69,9 +71,9 @@ export class AuthService {
 
     return this.http
       .get<AuthResponse>('http://localhost:4000/api/auth/check-status', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
       })
       .pipe(
         tap((resp) => this.handleAuthSuccess(resp)),
