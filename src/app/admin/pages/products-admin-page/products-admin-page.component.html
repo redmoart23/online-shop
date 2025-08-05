@@ -1,1 +1,31 @@
-<p>products-admin-page works!</p>
+<h1 class="text-2xl font-bold text-primary text-center mb-2">
+  Listado de productos
+</h1>
+<h3 class="text-lg">
+  Total de productos
+  <span class="font-bold text-primary">
+    {{ productsResource.value()?.count ?? 0 }}
+  </span>
+</h3>
+
+<div class="divider"></div>
+
+<div class="flex gap-2 items-center h-20">
+  <shared-pagination
+    [pages]="productsResource.value()?.pages ?? 0"
+    [currentPage]="paginationService.currentPage()"
+  />
+
+  <select class="select select-bordered w-32"
+    (change)="productsPerPage.set(+selectPerPage.value)"
+    #selectPerPage
+  >
+    <option value="10">10</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+</div>
+
+<!-- Listado de productos -->
+<products-tables [products]="productsResource.value()?.products ?? []" />

@@ -52,4 +52,16 @@ export class ProductsService {
       tap((response) => this.productCache.set(key, response))
     );
   }
+
+  fetchProductById(id: string): Observable<Product> {
+    const key = id;
+    if (this.productCache.has(key)) {
+      return of(this.productCache.get(key)!);
+    }
+
+    return this.http.get<Product>(`${baseUrl}/products/${id}`).pipe(
+      tap((response) => console.log('Product fetched:', response)),
+      tap((response) => this.productCache.set(key, response))
+    );
+  }
 }

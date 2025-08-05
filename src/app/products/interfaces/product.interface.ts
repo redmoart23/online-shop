@@ -17,6 +17,7 @@ export interface Product {
   gender: Gender;
   images: string[];
   user: User;
+  tags: string[];
 }
 
 export enum Gender {
