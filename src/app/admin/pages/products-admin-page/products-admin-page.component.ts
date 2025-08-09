@@ -3,15 +3,14 @@ import { ProductsTablesComponent } from '@/products/components/products-tables/p
 import { ProductsService } from '@/products/services/products.service';
 import { PaginationService } from '@/shared/components/pagination/pagination.service';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
-import { PaginationComponent } from "@/shared/components/pagination/pagination.component";
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { PaginationComponent } from '@/shared/components/pagination/pagination.component';
 import { single } from 'rxjs';
 
 @Component({
   selector: 'app-products-admin-page',
-  imports: [ProductsTablesComponent, PaginationComponent],
+  imports: [ProductsTablesComponent, PaginationComponent, RouterLink],
   templateUrl: './products-admin-page.component.html',
-  styles: ``,
 })
 export class ProductsAdminPageComponent {
   productsService = inject(ProductsService);
@@ -22,7 +21,8 @@ export class ProductsAdminPageComponent {
     // reactive input
     params: () => ({
       limit: this.productsPerPage(),
-      offset: this.productsPerPage() * (this.paginationService.currentPage() - 1),
+      offset:
+        this.productsPerPage() * (this.paginationService.currentPage() - 1),
       gender: '',
     }),
 

@@ -1,23 +1,35 @@
 import { Product } from '@/products/interfaces/product.interface';
-import { Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { ProductCarouselComponent } from '@/products/components/product-carousel/product-carousel.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormUtils } from '@/utils/form-utils';
+import { FormErrorLabelComponent } from '@/shared/components/form-error-label/form-error-label.component';
+import { ProductsService } from '@/products/services/products.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'product-details',
-  imports: [ProductCarouselComponent, ReactiveFormsModule],
+  imports: [
+    ProductCarouselComponent,
+    ReactiveFormsModule,
+    FormErrorLabelComponent,
+  ],
   templateUrl: './product-details.component.html',
   styles: ``,
 })
 export class ProductDetailsComponent implements OnInit {
   product = input.required<Product>();
+  productService = inject(ProductsService);
+
+  wasSaved = signal(false);
+
+  router = inject(Router);
 
   fb = inject(FormBuilder);
 
   productForm = this.fb.group({
     title: ['', Validators.required],
-    desciption: ['', Validators.required],
+    description: ['', Validators.required],
     slug: [
       '',
       [Validators.required, Validators.pattern(FormUtils.slugPattern)],
@@ -44,7 +56,40 @@ export class ProductDetailsComponent implements OnInit {
     this.productForm.patchValue({ tags: formLike.tags?.join(', ') });
   }
 
+  onSizeChange(size: string) {
+    const currentSizes = this.productForm.value.sizes ?? [];
+
+    if (currentSizes.includes(size)) {
+      currentSizes.splice(currentSizes.indexOf(size), 1);
+    } else {
+      currentSizes.push(size);
+    }
+  }
+
   onSubmit() {
-    console.log('Form submitted:', this.productForm.value);
+    const isValid = this.productForm.valid;
+    this.productForm.markAllAsTouched();
+
+    if (!isValid) return;
+
+    const formValue = this.productForm.value;
+
+    const productLike: Partial<Product> = {
+      ...(formValue as any),
+      tags: formValue.tags?.split(',').map((tag: string) => tag.trim()) ?? [],
+    };
+
+    if (this.product().id === 'new') {
+      this.productService.createProduct(productLike).subscribe((product) => {
+        console.log('Product created');
+        this.router.navigate(['/admin/products', product.id]);
+      });
+    } else {
+      this.productService
+        .updateProduct(this.product().id, productLike)
+        .subscribe((product) => {
+          console.log('Product updated');
+        });
+    }
   }
 }
